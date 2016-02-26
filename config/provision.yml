@@ -1,0 +1,126 @@
+---
+- hosts: all
+  vars:
+    get_php54: "{{ lookup('env', 'GETPHP54')}}"
+    get_rvm: "{{ lookup('env', 'GETRVM')}}"
+    get_pip: "{{ lookup('env', 'GETPIP')}}"
+  become: yes
+  tasks:
+  - name: Install ansible helpers
+    yum: name={{ item }} state=latest
+    with_items:
+      - libselinux-python
+      - MySQL-python
+  - name: Disable SELinux
+    selinux: state=disabled
+  - name: Elevate permissions on vagrant home dir
+    file: path=/home/vagrant mode=0755
+  - name: Create /home/vagrant/log dir
+    file: path=/home/vagrant/log state=directory owner=vagrant group=vagrant mode=0777
+
+  - name: Install YUM helpers
+    yum: name={{ item }} state=latest
+    with_items:
+      - deltarpm
+      - yum-cron
+      - yum-utils
+  - name: Install WebTatic repository
+    yum: name=https://mirror.webtatic.com/yum/el7/webtatic-release.rpm state=present
+  - name: Install Common Packages
+    yum: name={{ item }} state=latest
+    with_items:
+      - vim-enhanced
+      - nano
+      - mlocate
+      - mc
+      - wget
+      - ftp
+      - zip
+      - unzip
+      - bash-completion
+      - bind-utils
+      - net-tools
+      - rsync
+  - name: Give vagrant user custom vimrc
+    copy: src=files/vimrc dest=/home/vagrant/.vimrc owner=vagrant group=vagrant mode=0664
+  - name: Give root user custom vimrc
+    copy: src=files/vimrc dest=/root/.vimrc owner=root group=root mode=0664
+
+  - name: Install Apache Web Server
+    yum: name=httpd state=latest
+  - name: Remove welcome.conf from Apache
+    file: path=/etc/httpd/conf.d/welcome.conf state=absent
+  - name: Add Default virtualhost
+    copy: src=files/devvirtualhost.conf dest=/etc/httpd/conf.d/devvirtialhost.conf owner=root group=root mode=0644
+
+  - name: Install MySQL RDBMS (MariaDB)
+    yum: name={{ item }} state=latest
+    with_items:
+      - mariadb
+      - mariadb-server
+  - name: Custom MySQL config
+    copy: src=files/my.cnf dest=/etc/my.cnf owner=root group=root mode=0644
+
+  - name: Install PHP 5.6
+    yum: name={{ item }} state=latest
+    with_items:
+      - php56w
+      - php56w-cli
+      - php56w-opcache
+      - php56w-common
+      - php56w-mysqlnd
+      - php56w-pdo
+      - php56w-pear
+      - php56w-gd
+      - php56w-mcrypt
+      - php56w-mbstring
+      - php56w-xml
+      - php56w-xmlrpc
+      - php56w-pecl-imagick
+    when: get_php54 == "no"
+  - name: Install system default PHP
+    yum: name={{ item }} state=latest
+    with_items:
+      - php
+      - php-cli
+      - php-common
+      - php-mysqlnd
+      - php-pdo
+      - php-pear
+      - php-gd
+      - php-mcrypt
+      - php-mbstring
+      - php-xml
+      - php-xmlrpc
+      - php-pecl-imagick
+    when: get_php54 == "yes"
+  - name: Install customphp.ini
+    copy: src=files/customphp.ini dest=/etc/php.d/customphp.ini owner=root group=root mode=0644
+  - name: Install Composer
+    shell: "{{ item }} creates=/usr/bin/composer"
+    with_items:
+      - php -r "readfile('https://getcomposer.org/installer');" > /tmp/composer-setup.php
+      - php /tmp/composer-setup.php --install-dir=/usr/bin --filename=composer
+      - php -r "unlink('/tmp/composer-setup.php');"
+  - name: Install PhpMyAdmin
+    yum: name=phpmyadmin state=latest
+  - name: Proper httpd config for phpmyadmin
+    copy: src=files/phpMyAdmin.conf dest=/etc/httpd/conf.d/phpMyAdmin.conf owner=root group=root mode=0644
+  - name: Install config.inc.php for phpmyadmin
+    copy: src=files/config.inc.php dest=/etc/phpMyAdmin/config.inc.php owner=root group=root mode=0644
+  - name: Place info.php in www root
+    copy: src=files/info.php dest=/home/vagrant/www/info.php owner=vagrant group=vagrant mode=0755
+
+  - name: Install VsFTPd
+    yum: name=vsftpd state=latest
+  - name: Start Apache Web Server
+    service: name=httpd state=started enabled=yes
+  - name: Start MySQL service
+    service: name=mariadb state=started enabled=yes
+  - name: Start VsFTPd
+    service: name=vsftpd state=started enabled=yes
+
+  - include: rvm.yml
+    when: get_rvm == "yes"
+  - include: pip.yml
+    when: get_pip == "yes"

@@ -1,0 +1,76 @@
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Key mappings
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+set pastetoggle=<F2>            " Toggle auto-indenting for code paste
+let mapleader = ","             " Use ',' (comma char) as leader key, instead of default '\'
+nnoremap <C-J> <C-W><C-J>       " Move between windows with CTRL-h/j/k/l instead of CTRL-o,h/j/k/l
+nnoremap <C-K> <C-W><C-K>
+nnoremap <C-L> <C-W><C-L>
+nnoremap <C-H> <C-W><C-H>
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => General
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+set history=500                 " Sets how many lines of history VIM has to remember
+set timeoutlen=150              " Time to wait after ESC (default causes an annoying delay)
+set autoread                    " Set to auto read when a file is changed from the outside
+" Bash-style tab completion
+set wildmode=longest,list
+set wildmenu
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Text, tab and indent related
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+set tabstop=2                   " Set the default tabstop
+set shiftwidth=2                " Set the default shift width for indents
+set expandtab                   " Make tabs into spaces (set by tabstop)
+set smarttab                    " Smarter tab levels
+set autoindent                  " Auto indent
+
+" Language specific
+let python_highlight_all = 1
+autocmd Filetype python setlocal ts=4 sw=4 expandtab autoindent
+
+""""""""""""""""""""""""""""""
+" => Status line
+""""""""""""""""""""""""""""""
+set laststatus=2                " Always show the status line
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => Colors and Fonts
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+set t_Co=256
+syntax enable                   " Enable syntax highlighting
+
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+" => VIM user interface
+"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+set so=7                        " Set 7 lines to the cursor - when moving vertically using j/k
+set wildignore=*.o,*~,*.pyc     " Ignore compiled files
+set ruler                       " Always show current position
+"set cursorline
+set hid                         " A buffer becomes hidden when it is abandoned
+
+set splitbelow                  " More natural splitting
+set splitright
+
+" Configure backspace so it acts as it should act
+set backspace=eol,start,indent
+set whichwrap+=<,>,h,l
+
+set ignorecase                  " Ignore case when searching
+set smartcase                   " When searching try to be smart about cases
+set hlsearch                    " Highlight search results
+set incsearch                   " Makes search act like search in modern browsers
+
+set lazyredraw                  " Don't redraw while executing macros (good performance config)
+set magic                       " For regular expressions turn magic on
+
+set showmatch                   " Show matching brackets when text indicator is over them
+set matchtime=5                 " How many tenths of a second to blink when matching brackets
+
+" No annoying sound on errors
+set noerrorbells
+set novisualbell
+set t_vb=
+set tm=500
