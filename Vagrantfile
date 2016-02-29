@@ -4,12 +4,11 @@
 # HELP ##########################################################
 #
 # PROJECT_WWW_DIR - directory which contains your project
-#                   will be available in vagrant
 #                   forward slashes should be used as directory separator
-# PHP54 - "yes" will install default PHP 5.4 from CentOS 7.2 repo.
-#         "no" will install PHP 5.6 from WebTatic repository
-# RVM - "yes" will install stable RVM
-# PIP - "yes" will install PIP
+# PHP54 - "yes" for default PHP  from CentOS repo (5.4)
+#         "no" for PHP 5.6 from WebTatic repository
+# RVM - "yes" install stable RVM
+# PIP - "yes" install PIP
 # PORTS - list of ports you want to expose to host system
 #
 # CONFIGURATION #################################################
@@ -24,6 +23,10 @@ PORTS={
     "80"    => 8080,
 }
 
+# OPTIONAL ######################################################
+# IP_ADDRESS = ""
+# GATEWAY = ""
+# Uncomment lines 41 and 42 for this to work.
 #################################################################
 
 Vagrant.configure(2) do |config|
@@ -33,6 +36,9 @@ Vagrant.configure(2) do |config|
   config.vm.define HOSTNAME do |node|
     node.vm.box       = "bento/centos-7.2"
     node.vm.hostname  = HOSTNAME
+
+    #node.vm.network "public_network", ip: IP_ADDRESS
+    #config.vm.provision "shell", run: "always", inline: "route add default gw " + GATEWAY
 
     node.vm.synced_folder PROJECT_WWW_DIR, "/home/vagrant/www", mount_options: ["dmode=777", "fmode=777"]
 
