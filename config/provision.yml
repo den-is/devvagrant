@@ -108,8 +108,9 @@
     copy: src=files/phpMyAdmin.conf dest=/etc/httpd/conf.d/phpMyAdmin.conf owner=root group=root mode=0644
   - name: Install config.inc.php for phpmyadmin
     copy: src=files/config.inc.php dest=/etc/phpMyAdmin/config.inc.php owner=root group=root mode=0644
-  - name: Place info.php in www root
-    copy: src=files/info.php dest=/home/vagrant/www/info.php owner=vagrant group=vagrant mode=0755
+  # Disabled because not working on Windows hosts. Example issue: https://github.com/ansible/ansible/issues/9526
+  #- name: Place info.php in www root
+  #  copy: src=files/info.php dest=/home/vagrant/www/info.php owner=vagrant group=vagrant mode=0755
 
   - name: Install VsFTPd
     yum: name=vsftpd state=latest
