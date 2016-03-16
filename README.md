@@ -1,9 +1,9 @@
 # Usage
 
 1. Install Oracle VirtualBox https://www.virtualbox.org/wiki/Downloads
-2. Install Vagrant https://www.vagrantup.com/downloads.html
+2. Install Vagrant https://www.vagrantup.com/downloads.html (version >= 1.8.1)
 3. Clone this repository to some directory on your machine
-4. [Optional] Edit `Vagrantfile` in cloned directory
+4. Edit `Vagrantfile` in cloned directory. Set your `PROJECT_WWW_DIR`. Optionally disable/enable other features, which are described below.
 5. Run console command `vagrant up`
 6. Run `vagrant reload` after initial/first `vagrant up`
 
