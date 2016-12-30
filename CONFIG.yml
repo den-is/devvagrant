@@ -1,0 +1,25 @@
+---
+#---------------------------------------------------------#
+# POSSIBLE NODE STRUCTURE OVERVIEW
+#
+# devbox: optional hostname of your future VM
+#   project_dir: path to directory with your project(s). forward slashes should be used as directory separator
+#   webserver: posible string values: "nginx", "apache"
+#   php: possible integer values: 54, 56, 70, 71
+#   rvm: posible string values: yes, no
+#   pip: posible string values: yes, no
+#   ports: list of ports you want to expose to host system. not required if using public network below.
+#     #vm: host
+#     80: 8080
+#   public_network: optional
+#     ip: 192.168.0.100
+#     gateway: 192.168.0.1
+#---------------------------------------------------------#
+devbox:
+  project_dir: C:/Users/username/projects/project/www
+  webserver: nginx
+  php: 70
+  rvm: no
+  pip: no
+  ports:
+    80: 8080

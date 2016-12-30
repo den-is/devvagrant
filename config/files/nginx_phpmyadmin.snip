@@ -1,0 +1,11 @@
+location /pma {
+  alias /opt/phpmyadmin/;
+}
+
+location ~ /pma/(.+\.php)$ {
+  alias /opt/phpmyadmin/$1;
+  fastcgi_index index.php;
+  fastcgi_param SCRIPT_FILENAME /opt/phpmyadmin/$1;
+  fastcgi_pass  127.0.0.1:9000;
+  include       fastcgi_params;
+}

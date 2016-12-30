@@ -1,76 +1,56 @@
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Key mappings
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-set pastetoggle=<F2>            " Toggle auto-indenting for code paste
-let mapleader = ","             " Use ',' (comma char) as leader key, instead of default '\'
-nnoremap <C-J> <C-W><C-J>       " Move between windows with CTRL-h/j/k/l instead of CTRL-o,h/j/k/l
+" First set leader key
+let mapleader = ","                             " Use ',' (comma char) as leader key, instead of default '\'
+set pastetoggle=<F2>                            " Toggle auto-indenting for code paste
+nnoremap <C-J> <C-W><C-J>                       " Move between windows with CTRL-h/j/k/l instead of CTRL-o,h/j/k/l
 nnoremap <C-K> <C-W><C-K>
 nnoremap <C-L> <C-W><C-L>
 nnoremap <C-H> <C-W><C-H>
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => General
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-set history=500                 " Sets how many lines of history VIM has to remember
-set timeoutlen=150              " Time to wait after ESC (default causes an annoying delay)
-set autoread                    " Set to auto read when a file is changed from the outside
-" Bash-style tab completion
-set wildmode=longest,list
-set wildmenu
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Text, tab and indent related
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-set tabstop=2                   " Set the default tabstop
-set shiftwidth=2                " Set the default shift width for indents
-set expandtab                   " Make tabs into spaces (set by tabstop)
-set smarttab                    " Smarter tab levels
-set autoindent                  " Auto indent
-
-" Language specific
+nnoremap <Tab> :bnext<CR>                       " Cycle through tabs
+nnoremap <S-Tab> :bprevious<CR>
+nnoremap <Leader>w :write<CR>                   " Save file with leader
+nnoremap <Leader>q :quit<cr>                    " Quit file with leader
+nnoremap <silent> <Leader>/ :nohlsearch<CR>     " Dismiss search highlightedness
+set tabstop=2
+set shiftwidth=2
+set expandtab
+set smarttab
+set autoindent
 let python_highlight_all = 1
-autocmd Filetype python setlocal ts=4 sw=4 expandtab autoindent
-
-""""""""""""""""""""""""""""""
-" => Status line
-""""""""""""""""""""""""""""""
-set laststatus=2                " Always show the status line
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => Colors and Fonts
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+autocmd Filetype python setlocal tabstop=4 shiftwidth=4 expandtab autoindent
+" or use ~/.vim/ftplugin/LANGUAGE.vim
 set t_Co=256
-syntax enable                   " Enable syntax highlighting
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" => VIM user interface
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-set so=7                        " Set 7 lines to the cursor - when moving vertically using j/k
-set wildignore=*.o,*~,*.pyc     " Ignore compiled files
-set ruler                       " Always show current position
-"set cursorline
-set hid                         " A buffer becomes hidden when it is abandoned
-
-set splitbelow                  " More natural splitting
-set splitright
-
-" Configure backspace so it acts as it should act
+syntax enable
+set ignorecase
+set smartcase
+set hlsearch
+set incsearch
+set wrapscan
+set fileformat=unix
+set encoding=utf-8
+set history=500
+set timeoutlen=150
+set laststatus=2
+set scrolloff=5
+set hidden
+set autoread
+set ruler
 set backspace=eol,start,indent
-set whichwrap+=<,>,h,l
-
-set ignorecase                  " Ignore case when searching
-set smartcase                   " When searching try to be smart about cases
-set hlsearch                    " Highlight search results
-set incsearch                   " Makes search act like search in modern browsers
-
-set lazyredraw                  " Don't redraw while executing macros (good performance config)
-set magic                       " For regular expressions turn magic on
-
-set showmatch                   " Show matching brackets when text indicator is over them
-set matchtime=5                 " How many tenths of a second to blink when matching brackets
-
-" No annoying sound on errors
+set whichwrap+=<,>,h,l,[,]
+set splitbelow
+set splitright
+set lazyredraw
+set magic
+set showmatch
+set matchtime=5
+set nojoinspaces
+set showcmd
+set list listchars=tab:»·,trail:·,nbsp:·
+"set cursorline
+"set number
+set wildmenu
+set wildmode=list:longest,full
+set wildignore=*.o,*~,*.pyc,*.so,*.zip
 set noerrorbells
-set novisualbell
+set visualbell
 set t_vb=
 set tm=500

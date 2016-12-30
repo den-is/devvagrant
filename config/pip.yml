@@ -1,5 +1,0 @@
----
-- name: Download PIP
-  get_url: url=https://bootstrap.pypa.io/get-pip.py dest=/tmp/get-pip.py
-- name: Install PIP
-  command: python /tmp/get-pip.py creates=/usr/bin/pip

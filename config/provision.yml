@@ -1,34 +1,8 @@
 ---
 - hosts: all
   vars:
-    get_php54: "{{ lookup('env', 'GETPHP54')}}"
-    get_rvm: "{{ lookup('env', 'GETRVM')}}"
-    get_pip: "{{ lookup('env', 'GETPIP')}}"
-  become: yes
-  tasks:
-  - name: Install ansible helpers
-    yum: name={{ item }} state=latest
-    with_items:
-      - libselinux-python
-      - MySQL-python
-  - name: Disable SELinux
-    selinux: state=disabled
-  - name: Elevate permissions on vagrant home dir
-    file: path=/home/vagrant mode=0755
-  - name: Create /home/vagrant/log dir
-    file: path=/home/vagrant/log state=directory owner=vagrant group=vagrant mode=0777
-
-  - name: Install YUM helpers
-    yum: name={{ item }} state=latest
-    with_items:
-      - deltarpm
-      - yum-cron
-      - yum-utils
-  - name: Install WebTatic repository
-    yum: name=https://mirror.webtatic.com/yum/el7/webtatic-release.rpm state=present
-  - name: Install Common Packages
-    yum: name={{ item }} state=latest
-    with_items:
+    phpmyadmin_url: 'https://files.phpmyadmin.net/phpMyAdmin/4.6.5.2/phpMyAdmin-4.6.5.2-english.tar.gz'
+    common_pkgs:
       - vim-enhanced
       - nano
       - mlocate
@@ -41,87 +15,206 @@
       - bind-utils
       - net-tools
       - rsync
-  - name: Give vagrant user custom vimrc
+    php_pkgs:
+      php54:
+        - php
+        - php-cli
+        - php-common
+        - php-mysqlnd
+        - php-pdo
+        - php-pear
+        - php-gd
+        - php-mcrypt
+        - php-mbstring
+        - php-xml
+        - php-xmlrpc
+        - php-pecl-imagick
+      php56:
+        - php56u
+        - php56u-cli
+        - php56u-bcmath
+        - php56u-opcache
+        - php56u-common
+        - php56u-mysqlnd
+        - php56u-pdo
+        - php56u-pear
+        - php56u-gd
+        - php56u-mcrypt
+        - php56u-mbstring
+        - php56u-xml
+        - php56u-xmlrpc
+        - php56u-pecl-imagick
+        - php56u-pecl-redis
+      php70:
+        - php70u-cli
+        - php70u-common
+        - php70u-pear
+        - php70u-opcache
+        - php70u-bcmath
+        - php70u-mysqlnd
+        - php70u-pdo
+        - php70u-json
+        - php70u-gd
+        - php70u-mcrypt
+        - php70u-mbstring
+        - php70u-xml
+        - php70u-xmlrpc
+        - php70u-pecl-imagick
+        - php70u-pecl-redis
+      php71:
+        - php71u-cli
+        - php71u-common
+        - php71u-pear
+        - php71u-opcache
+        - php71u-bcmath
+        - php71u-mysqlnd
+        - php71u-pdo
+        - php71u-json
+        - php71u-gd
+        - php71u-mcrypt
+        - php71u-mbstring
+        - php71u-xml
+        - php71u-xmlrpc
+  become: yes
+  tasks:
+  - name: Installing ansible helpers
+    yum: name={{ item }} state=latest
+    with_items:
+      - libselinux-python
+      - MySQL-python
+  - name: Installing YUM helpers
+    yum: name={{ item }} state=latest
+    with_items:
+      - deltarpm
+      - yum-cron
+      - yum-utils
+  - name: Installing Common Packages
+    yum: name={{ item }} state=latest
+    with_items: "{{ common_pkgs }}"
+
+  - name: Disabling SELinux
+    selinux: state=disabled
+  - name: Elevating permissions on vagrant home dir
+    file: path=/home/vagrant mode=0755
+  - name: Creating /home/vagrant/log dir
+    file: path=/home/vagrant/log state=directory owner=vagrant group=vagrant mode=0777
+
+  - name: Giving vagrant user custom vimrc
     copy: src=files/vimrc dest=/home/vagrant/.vimrc owner=vagrant group=vagrant mode=0664
-  - name: Give root user custom vimrc
+  - name: Giving root user custom vimrc
     copy: src=files/vimrc dest=/root/.vimrc owner=root group=root mode=0664
 
-  - name: Install Apache Web Server
-    yum: name=httpd state=latest
-  - name: Remove welcome.conf from Apache
-    file: path=/etc/httpd/conf.d/welcome.conf state=absent
-  - name: Add Default virtualhost
-    copy: src=files/devvirtualhost.conf dest=/etc/httpd/conf.d/devvirtialhost.conf owner=root group=root mode=0644
+  - block:
+    - name: Installing Apache webserver
+      yum: name=httpd state=latest
+    - name: Removing welcome.conf from Apache
+      file: path=/etc/httpd/conf.d/welcome.conf state=absent
+    - name: Adding default virtualhost
+      copy: src=files/apache_vhost.conf dest=/etc/httpd/conf.d/virtualhost.conf owner=root group=root mode=0644
+    when: webserver == 'apache'
 
-  - name: Install MySQL RDBMS (MariaDB)
+  - block:
+    - name: Setting Up Nginx repo
+      yum_repository:
+        name: nginx
+        description: Nginx repo
+        baseurl: http://nginx.org/packages/centos/7/$basearch/
+        gpgcheck: no
+    - name: Installing Nginx webserver
+      yum: name=nginx state=latest
+    - name: Removing default.conf
+      file: path=/etc/nginx/conf.d/default.conf state=absent
+    - name: Adding default virtualhost
+      copy: src=files/nginx_vhost.conf dest=/etc/nginx/conf.d/virtualhost.conf owner=root group=root mode=0644
+    when: webserver == 'nginx'
+
+  - name: Installing MySQL RDBMS (MariaDB)
     yum: name={{ item }} state=latest
     with_items:
       - mariadb
       - mariadb-server
-  - name: Custom MySQL config
+  - name: Putting Custom MySQL config
     copy: src=files/my.cnf dest=/etc/my.cnf owner=root group=root mode=0644
 
-  - name: Install PHP 5.6
+  - name: Installing IUS repository
+    yum: name=https://centos7.iuscommunity.org/ius-release.rpm state=present
+  - name: Installing PHP
     yum: name={{ item }} state=latest
-    with_items:
-      - php56w
-      - php56w-cli
-      - php56w-opcache
-      - php56w-common
-      - php56w-mysqlnd
-      - php56w-pdo
-      - php56w-pear
-      - php56w-gd
-      - php56w-mcrypt
-      - php56w-mbstring
-      - php56w-xml
-      - php56w-xmlrpc
-      - php56w-pecl-imagick
-    when: get_php54 == "no"
-  - name: Install system default PHP
-    yum: name={{ item }} state=latest
-    with_items:
-      - php
-      - php-cli
-      - php-common
-      - php-mysqlnd
-      - php-pdo
-      - php-pear
-      - php-gd
-      - php-mcrypt
-      - php-mbstring
-      - php-xml
-      - php-xmlrpc
-      - php-pecl-imagick
-    when: get_php54 == "yes"
-  - name: Install customphp.ini
+    with_items: "{{ php_pkgs[ 'php' + php | string ] }}"
+  - name: Putting customphp.ini
     copy: src=files/customphp.ini dest=/etc/php.d/customphp.ini owner=root group=root mode=0644
-  - name: Install Composer
-    shell: "{{ item }} creates=/usr/bin/composer"
-    with_items:
-      - php -r "readfile('https://getcomposer.org/installer');" > /tmp/composer-setup.php
-      - php /tmp/composer-setup.php --install-dir=/usr/bin --filename=composer
-      - php -r "unlink('/tmp/composer-setup.php');"
-  - name: Install PhpMyAdmin
-    yum: name=phpmyadmin state=latest
-  - name: Proper httpd config for phpmyadmin
-    copy: src=files/phpMyAdmin.conf dest=/etc/httpd/conf.d/phpMyAdmin.conf owner=root group=root mode=0644
-  - name: Install config.inc.php for phpmyadmin
-    copy: src=files/config.inc.php dest=/etc/phpMyAdmin/config.inc.php owner=root group=root mode=0644
-  # Disabled because not working on Windows hosts. Example issue: https://github.com/ansible/ansible/issues/9526
-  #- name: Place info.php in www root
-  #  copy: src=files/info.php dest=/home/vagrant/www/info.php owner=vagrant group=vagrant mode=0755
+  - name: Installing Composer
+    get_url: url=https://getcomposer.org/composer.phar dest=/usr/bin/composer owner=root group=root mode=0755
+  - name: Installing mod_php
+    yum: name=mod_php{{ php }}u state=latest
+    when: webserver == 'apache' and php > 54
+  - name: Installing php-fpm
+    yum: name=php{{ php }}u-fpm state=latest
+    when: webserver == 'nginx' and php > 54
+  - name: Installing php-fpm v5.4
+    yum: name=php-fpm state=latest
+    when: webserver == 'nginx' and php == 54
 
-  - name: Install VsFTPd
-    yum: name=vsftpd state=latest
-  - name: Start Apache Web Server
+  - name: Downloading PhpMyAdmin
+    get_url: url={{ phpmyadmin_url }} dest=/tmp/phpmyadmin.tar.gz
+  - name: Extracting PhpMyAdmin
+    unarchive: src=/tmp/phpmyadmin.tar.gz dest=/tmp creates=/opt/phpmyadmin
+  - name: Moving PhpMyAdmin to /opt/phpmyadmin
+    shell: mv /tmp/phpMyAdmin* /opt/phpmyadmin creates=/opt/phpmyadmin
+  - name: Installing config.inc.php for phpmyadmin
+    copy: src=files/config.inc.php dest=/opt/phpmyadmin/config.inc.php owner=root group=root mode=0644
+  - name: Apache config for PhpMyAdmin
+    copy: src=files/apache_phpmyadmin.conf dest=/etc/httpd/conf.d/phpmyadmin.conf owner=root group=root mode=0644
+    when: webserver == 'apache'
+  - name: Nginx config for PhpMyAdmin
+    copy: src=files/nginx_phpmyadmin.snip dest=/etc/nginx/conf.d/phpmyadmin.snip owner=root group=root mode=0644
+    when: webserver == 'nginx'
+
+  - name: Starting Apache webserver
     service: name=httpd state=started enabled=yes
-  - name: Start MySQL service
+    when: webserver == 'apache'
+  - name: Starting PHP-FPM
+    service: name=php-fpm state=started enabled=yes
+    when: webserver == 'nginx'
+  - name: Starting Nginx webserver
+    service: name=nginx state=started enabled=yes
+    when: webserver == 'nginx'
+  - name: Starting MySQL service
     service: name=mariadb state=started enabled=yes
-  - name: Start VsFTPd
+
+  - name: Installing VsFTPd
+    yum: name=vsftpd state=latest
+  - name: Starting VsFTPd
     service: name=vsftpd state=started enabled=yes
 
-  - include: rvm.yml
-    when: get_rvm == "yes"
-  - include: pip.yml
-    when: get_pip == "yes"
+  - block:
+    - name: Import gpg key for RVM install
+      command: gpg --keyserver hkp://keys.gnupg.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3
+    - name: Disable docs for ruby gems for vagrant user.
+      lineinfile:
+        dest: /home/vagrant/.gemrc
+        line: "gem: --no-rdoc --no-ri"
+        state: present
+        create: yes
+        owner: vagrant
+        group: vagrant
+        mode: 0660
+    - name: Disable docs for ruby gems for root user.
+      lineinfile:
+        dest: /root/.gemrc
+        line: "gem: --no-rdoc --no-ri"
+        state: present
+        create: yes
+        owner: root
+        group: root
+        mode: 0660
+    - name: Install RVM
+      shell: curl -sSL https://get.rvm.io | bash -s stable creates=/usr/local/rvm/bin/rvm
+    when: rvm
+
+  - block:
+    - name: Download PIP
+      get_url: url=https://bootstrap.pypa.io/get-pip.py dest=/tmp/get-pip.py
+    - name: Install PIP
+      command: python /tmp/get-pip.py creates=/usr/bin/pip
+    when: pip
