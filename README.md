@@ -1,3 +1,9 @@
+# About
+Provides CentOS virtual machine with preconfigured PHP development environment.
+Supports different versions of PHP: 5.4, 5.6, 7.0, 7.1. And two major web servers of choicei, Apache and Nginx.
+By default it will install Nginx + PHP v7.0
+You can access PhpMyAdmin via http://localhost:8080/pma/ (trailing slash is required)
+
 # Usage
 1. Install Oracle VirtualBox https://www.virtualbox.org/wiki/Downloads
 2. Install Vagrant https://www.vagrantup.com/downloads.html (version >= 1.9.1)
@@ -10,12 +16,10 @@
 Full example in CONFIG.yml
 * **project_dir** - Directory which contains your project. Forward slashes (*nix style) should be used as directory separator, even on Windows machine.
 * **php** - possible integer values: 54, 56, 70, 71. which correspond to PHP versions 5.4, 5.6, etc.
-* **rvm** - `no/yes` installs stable RVM
+* **rvm** - `no/yes` installs stable RVM. This installs RVM only. You have to install Ruby of your choice on your own. Example `rvm list known` and `rvm install 2.4`
 * **pip** - `no/yes` installs PIP
 * **ports** - list of ports you want to expose to host system "vm_port: host_port"
 * **public_network** - optional. If you want to enable direct access to VM over network, supply values for `ip` and `gateway`.
-
-
 
 ##### Common Vagrant CLI commands
 * `vagrant up` - turn on machine or build machine when not exists
