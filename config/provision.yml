@@ -193,7 +193,7 @@
     - name: Disable docs for ruby gems for vagrant user.
       lineinfile:
         dest: /home/vagrant/.gemrc
-        line: "gem: --no-rdoc --no-ri"
+        line: "gem: --no-document"
         state: present
         create: yes
         owner: vagrant
@@ -202,7 +202,7 @@
     - name: Disable docs for ruby gems for root user.
       lineinfile:
         dest: /root/.gemrc
-        line: "gem: --no-rdoc --no-ri"
+        line: "gem: --no-document"
         state: present
         create: yes
         owner: root
