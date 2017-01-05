@@ -14,6 +14,9 @@
 #   public_network: optional
 #     ip: 192.168.0.100
 #     gateway: 192.168.0.1
+#   hw:
+#     cpu: 2
+#     ram: 2048
 #---------------------------------------------------------#
 devbox:
   project_dir: C:/Users/username/projects/project/www

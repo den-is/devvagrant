@@ -21,6 +21,17 @@ Vagrant.configure(2) do |config|
         end
       end
 
+      if values.has_key?("hw")
+        node.vm.provider "virtualbox" do |vb|
+          if values["hw"].has_key?("cpu")
+            vb.cpus = values["hw"]["cpu"]
+          end
+          if values["hw"].has_key?("ram")
+            vb.memory = values["hw"]["ram"]
+          end
+        end
+      end
+
       node.vm.synced_folder values["project_dir"], "/home/vagrant/www", mount_options: ["dmode=777", "fmode=777"]
 
       values["ports"].each do |guest, host|
