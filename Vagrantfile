@@ -40,17 +40,10 @@ Vagrant.configure(2) do |config|
 
       node.vm.provision "shell", inline: "yum install -y -q -e0 -d0 epel-release"
 
-      $host_vars = {
-        'webserver' => values["webserver"],
-        'php'       => values["php"],
-        'pip'       => values["pip"],
-        'rvm'       => values["rvm"],
-      }
-
       node.vm.provision "ansible_local" do |ansible|
-        ansible.extra_vars          = $host_vars
+        ansible.extra_vars          = values
         ansible.provisioning_path   = "/vagrant/config"
-        ansible.playbook            = "provision.yml"
+        ansible.playbook            = values.fetch("config", "complete.yml")
       end
 
       node.vm.post_up_message = <<EOF

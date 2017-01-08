@@ -20,6 +20,7 @@ Full example in CONFIG.yml
 * **pip** - `no/yes` installs PIP
 * **ports** - list of ports you want to expose to host system "vm_port: host_port"
 * **public_network** - optional. If you want to enable direct access to VM over network, supply values for `ip` and `gateway`.
+* **config** - optional. Name of config file to apply on node. Node hash should has values required by this config file.
 * **hw** - optional. Customize hardware parameters of vm. Can supply `cpu` and `memory`, or one of those two.
 
 ##### Common Vagrant CLI commands
