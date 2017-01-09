@@ -1,4 +1,9 @@
 ---
+# REQUIRED external variables:
+# websever: apache or nginx
+# php: 54, 56, 70 or 71
+# pip: yes or no
+# rvm: yes or no
 - hosts: all
   vars:
     phpmyadmin_url: 'https://files.phpmyadmin.net/phpMyAdmin/4.6.5.2/phpMyAdmin-4.6.5.2-english.tar.gz'
