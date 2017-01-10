@@ -23,6 +23,7 @@
     php_pkgs:
       php54:
         - php
+        - php-fpm
         - php-cli
         - php-common
         - php-mysqlnd
@@ -33,9 +34,11 @@
         - php-mbstring
         - php-xml
         - php-xmlrpc
+        - php-pecl-redis
         - php-pecl-imagick
       php56:
         - php56u
+        - php56u-fpm
         - php56u-cli
         - php56u-bcmath
         - php56u-opcache
@@ -51,6 +54,7 @@
         - php56u-pecl-imagick
         - php56u-pecl-redis
       php70:
+        - php70u-fpm
         - php70u-cli
         - php70u-common
         - php70u-pear
@@ -67,6 +71,7 @@
         - php70u-pecl-imagick
         - php70u-pecl-redis
       php71:
+        - php71u-fpm
         - php71u-cli
         - php71u-common
         - php71u-pear
@@ -80,6 +85,7 @@
         - php71u-mbstring
         - php71u-xml
         - php71u-xmlrpc
+        - php71u-pecl-redis
   become: yes
   tasks:
   - name: Installing ansible helpers
@@ -150,15 +156,12 @@
     copy: src=files/customphp.ini dest=/etc/php.d/customphp.ini owner=root group=root mode=0644
   - name: Installing Composer
     get_url: url=https://getcomposer.org/composer.phar dest=/usr/bin/composer owner=root group=root mode=0755
-  - name: Installing mod_php
-    yum: name=mod_php{{ php }}u state=latest
+  - name: Installing PHP-FPM files for Apache
+    yum: name=php{{ php }}u-fpm-httpd state=latest
     when: webserver == 'apache' and php > 54
-  - name: Installing php-fpm
-    yum: name=php{{ php }}u-fpm state=latest
+  - name: Installing PHP-FPM files for Nginx
+    yum: name=php{{ php }}u-fpm-nginx state=latest
     when: webserver == 'nginx' and php > 54
-  - name: Installing php-fpm v5.4
-    yum: name=php-fpm state=latest
-    when: webserver == 'nginx' and php == 54
 
   - name: Downloading PhpMyAdmin
     get_url: url={{ phpmyadmin_url }} dest=/tmp/phpmyadmin.tar.gz
@@ -180,7 +183,6 @@
     when: webserver == 'apache'
   - name: Starting PHP-FPM
     service: name=php-fpm state=started enabled=yes
-    when: webserver == 'nginx'
   - name: Starting Nginx webserver
     service: name=nginx state=started enabled=yes
     when: webserver == 'nginx'

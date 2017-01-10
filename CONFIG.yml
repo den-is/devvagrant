@@ -4,6 +4,7 @@
 #
 # devbox: Node hash. Hash with configuration values for node. Hash key used as hostname of your future VM/Node.
 #   project_dir: path to directory with your project(s). forward slashes should be used as directory separator
+#   provision: optional. true or false. if provision node
 #   webserver: posible string values: "nginx", "apache"
 #   php: possible integer values: 54, 56, 70, 71
 #   rvm: posible string values: yes, no
@@ -11,9 +12,6 @@
 #   ports: list of ports you want to expose to host system. not required if using public network below.
 #     #vm: host
 #     80: 8080
-#   public_network: optional
-#     ip: 192.168.0.100
-#     gateway: 192.168.0.1
 #   config: my_example_config.yml - name of config file to apply on node. Node hash should include values required by this config file.
 #   hw:
 #     cpu: 2
@@ -23,7 +21,7 @@
 #---------------------------------------------------------#
 devbox:
   project_dir: C:/Users/username/projects/project/www
-  webserver: nginx
+  webserver: apache
   php: 70
   rvm: no
   pip: no
