@@ -154,6 +154,8 @@
     with_items: "{{ php_pkgs[ 'php' + php | string ] }}"
   - name: Putting customphp.ini
     copy: src=files/customphp.ini dest=/etc/php.d/customphp.ini owner=root group=root mode=0644
+  - name: Putting custom php-fpm pool
+    copy: src=files/fpm.pool dest=/etc/php-fpm.d/www.conf owner=root group=root mode=0644
   - name: Installing Composer
     get_url: url=https://getcomposer.org/composer.phar dest=/usr/bin/composer owner=root group=root mode=0755
   - name: Installing PHP-FPM files for Apache
@@ -162,6 +164,12 @@
   - name: Installing PHP-FPM files for Nginx
     yum: name=php{{ php }}u-fpm-nginx state=latest
     when: webserver == 'nginx' and php > 54
+  - name: Nginx config for PHP-FPM status page
+    copy: src=files/fpmstatus.nginx dest=/etc/nginx/conf.d/fpmstatus.snip owner=root group=root mode=0644
+    when: webserver == 'nginx'
+  - name: Apache config for PHP-FPM status page
+    copy: src=files/fpmstatus.apache dest=/etc/httpd/conf.d/fpmstatus.conf owner=root group=root mode=0644
+    when: webserver == 'apache'
 
   - name: Downloading PhpMyAdmin
     get_url: url={{ phpmyadmin_url }} dest=/tmp/phpmyadmin.tar.gz
@@ -170,12 +178,12 @@
   - name: Moving PhpMyAdmin to /opt/phpmyadmin
     shell: mv /tmp/phpMyAdmin* /opt/phpmyadmin creates=/opt/phpmyadmin
   - name: Installing config.inc.php for phpmyadmin
-    copy: src=files/config.inc.php dest=/opt/phpmyadmin/config.inc.php owner=root group=root mode=0644
+    copy: src=files/phpmyadmin.config dest=/opt/phpmyadmin/config.inc.php owner=root group=root mode=0644
   - name: Apache config for PhpMyAdmin
-    copy: src=files/apache_phpmyadmin.conf dest=/etc/httpd/conf.d/phpmyadmin.conf owner=root group=root mode=0644
+    copy: src=files/phpmyadmin.apache dest=/etc/httpd/conf.d/phpmyadmin.conf owner=root group=root mode=0644
     when: webserver == 'apache'
   - name: Nginx config for PhpMyAdmin
-    copy: src=files/nginx_phpmyadmin.snip dest=/etc/nginx/conf.d/phpmyadmin.snip owner=root group=root mode=0644
+    copy: src=files/phpmyadmin.nginx dest=/etc/nginx/conf.d/phpmyadmin.snip owner=root group=root mode=0644
     when: webserver == 'nginx'
 
   - name: Starting Apache webserver

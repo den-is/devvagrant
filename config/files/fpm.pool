@@ -1,0 +1,47 @@
+[www]
+user = php-fpm
+group = php-fpm
+listen = 127.0.0.1:9000
+listen.allowed_clients = 127.0.0.1
+pm = dynamic
+pm.max_children = 50
+pm.start_servers = 5
+pm.min_spare_servers = 5
+pm.max_spare_servers = 35
+pm.max_requests = 500
+;clear_env = no
+;security.limit_extensions = .php .php3 .php4 .php5 .php7
+
+pm.status_path = /status
+;ping.path = /ping
+
+; LOGGING
+;access.log = log/$pool.access.log
+;access.format = "%R - %u %t \"%m %r%Q%q\" %s %f %{mili}d %{kilo}M %C%%"
+;request_slowlog_timeout = 0
+slowlog = /home/vagrant/log/php.slow.log
+;catch_workers_output = yes
+php_admin_flag[log_errors] = on
+php_admin_flag[display_errors] = on
+php_admin_value[log_level] = notice
+php_admin_value[error_reporting] = E_ALL
+php_admin_value[error_log] = /home/vagrant/log/php.error.log
+
+php_value[session.save_handler] = files
+php_value[session.save_path]    = /var/lib/php/fpm/session
+php_value[soap.wsdl_cache_dir]  = /var/lib/php/fpm/wsdlcache
+;php_value[opcache.file_cache]  = /var/lib/php/fpm/opcache
+
+request_terminate_timeout = 300
+php_value[max_execution_time] = 300
+php_value[max_input_time] = 300
+
+php_admin_value[memory_limit] = 256M
+php_value[post_max_size] = 2G
+php_value[upload_max_filesize] = 2G
+
+env[HOSTNAME] = $HOSTNAME
+env[PATH] = /usr/local/bin:/usr/bin:/bin
+env[TMP] = /tmp
+env[TMPDIR] = /tmp
+env[TEMP] = /tmp

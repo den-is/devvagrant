@@ -10,8 +10,6 @@ nnoremap <S-Tab> :bprevious<CR>
 nnoremap <Leader>w :write<CR>
 nnoremap <Leader>q :quit<cr>
 nnoremap <silent> <Leader>/ :nohlsearch<CR>
-nnoremap <silent> <Leader>ev :e $MYVIMRC<CR>
-nnoremap <silent> <Leader>sv :so $MYVIMRC<CR>
 
 set tabstop=2
 set shiftwidth=2
@@ -50,7 +48,6 @@ set showmatch
 set matchtime=5
 set nojoinspaces
 set showcmd
-set list listchars=tab:»·,trail:·,nbsp:·
 "set cursorline
 "set number
 set wildmenu
