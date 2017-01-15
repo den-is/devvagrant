@@ -18,7 +18,7 @@ ATM it is not possible to configure VM with "public" or "private" networks
 ##### CONFIG options
 Full example in CONFIG.yml
 * **project_dir** - Directory which contains your project. Forward slashes (*nix style) should be used as directory separator, even on Windows machine.
-* **provision** - optional. true or false. If provision node
+* **provision** - optional. true, false or puppet. default true
 * **php** - possible integer values: 54, 56, 70, 71. which correspond to PHP versions 5.4, 5.6, etc.
 * **rvm** - `no/yes` installs stable RVM. This installs RVM only. You have to install Ruby of your choice on your own. Example `rvm list known` and `rvm install 2.4`
 * **pip** - `no/yes` installs PIP

@@ -4,6 +4,14 @@
 require 'yaml'
 boxes = YAML.load_file('CONFIG.yml')
 
+postupmessage = <<EOF
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+!                                                            !
+! Reboot VM after INITIAL 'vagrant up' with 'vagrant reload' !
+!                                                            !
+!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+EOF
+
 Vagrant.configure(2) do |config|
 
   boxes.each do |box, values|
@@ -29,22 +37,23 @@ Vagrant.configure(2) do |config|
         node.vm.network "forwarded_port", guest: guest, host: host
       end
 
-      if values.fetch("provision", true)
-        node.vm.provision "shell", inline: "yum install -y -q -e0 -d0 epel-release"
+      provision = values.fetch("provision", true)
+
+      if provision and provision != "puppet"
         node.vm.provision "ansible_local" do |ansible|
           ansible.extra_vars          = values
           ansible.provisioning_path   = "/vagrant/config"
           ansible.playbook            = values.fetch("config", "complete.yml")
         end
+        node.vm.post_up_message = postupmessage
+      elsif provision == "puppet"
+        node.vm.provision "shell", path: "puppet/bootstrap.sh"
+        node.vm.provision "puppet" do |puppet|
+          puppet.environment_path = "puppet"
+          puppet.environment = "production"
+          puppet.hiera_config_path = "puppet/hiera.yaml"
+        end
       end
-
-      node.vm.post_up_message = <<EOF
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-!                                                            !
-! Reboot VM after INITIAL 'vagrant up' with 'vagrant reload' !
-!                                                            !
-!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-EOF
 
     end
   end

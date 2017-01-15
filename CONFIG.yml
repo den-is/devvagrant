@@ -2,17 +2,17 @@
 #---------------------------------------------------------#
 # POSSIBLE NODE STRUCTURE OVERVIEW
 #
-# devbox: Node hash. Hash with configuration values for node. Hash key used as hostname of your future VM/Node.
+# devbox: Node hash. Hash with configuration values for node. Hash key used as hostname of your future VM/Node
 #   project_dir: path to directory with your project(s). forward slashes should be used as directory separator
-#   provision: optional. true or false. if provision node
-#   webserver: posible string values: "nginx", "apache"
+#   provision: optional. true, false or puppet. default true
+#   webserver: possible string values: "nginx", "apache"
 #   php: possible integer values: 54, 56, 70, 71
-#   rvm: posible string values: yes, no
-#   pip: posible string values: yes, no
-#   ports: list of ports you want to expose to host system. not required if using public network below.
+#   rvm: possible string values: yes, no
+#   pip: possible string values: yes, no
+#   ports: list of ports you want to expose to host system. not required if using public network below
 #     #vm: host
 #     80: 8080
-#   config: my_example_config.yml - name of config file to apply on node. Node hash should include values required by this config file.
+#   config: my_example_config.yml - name of ansible config file to apply on node. Node hash should include values required by this config file. Applicable only with default "provision" setting "true"
 #   hw:
 #     cpu: 2
 #     ram: 2048
