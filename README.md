@@ -1,10 +1,16 @@
 # About
 Provides CentOS virtual machine with preconfigured PHP development environment.
+
 Supports different versions of PHP: 5.4, 5.6, 7.0, 7.1. And two major web servers of choicei, Apache and Nginx.
+
 By default it will install Apache + PHP-FPM v7.0
+
 You can access PhpMyAdmin via http://localhost:8080/pma/ (trailing slash is required)
+
 Version of PhpMyAdmin in this setup supports only PHP v5.6+
+
 Access PHP-FPM status page by this url: http://localhost:8080/status
+
 ATM it is not possible to configure VM with "public" or "private" networks
 
 # Usage
