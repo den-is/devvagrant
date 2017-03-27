@@ -22,7 +22,7 @@
 devbox:
   project_dir: C:/Users/username/projects/project/www
   webserver: apache
-  php: 70
+  php: 71
   rvm: no
   pip: no
   ports:

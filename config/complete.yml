@@ -6,7 +6,7 @@
 # rvm: yes or no
 - hosts: all
   vars:
-    phpmyadmin_url: 'https://files.phpmyadmin.net/phpMyAdmin/4.6.5.2/phpMyAdmin-4.6.5.2-english.tar.gz'
+    phpmyadmin_url: 'https://files.phpmyadmin.net/phpMyAdmin/4.6.6/phpMyAdmin-4.6.6-english.tar.gz'
     common_pkgs:
       - vim-enhanced
       - nano
@@ -26,12 +26,14 @@
         - php-fpm
         - php-cli
         - php-common
+        - php-devel
         - php-mysqlnd
         - php-pdo
         - php-pear
         - php-gd
         - php-mcrypt
         - php-mbstring
+        - php-tidy
         - php-xml
         - php-xmlrpc
         - php-pecl-redis
@@ -40,23 +42,27 @@
         - php56u
         - php56u-fpm
         - php56u-cli
+        - php56u-common
+        - php56u-devel
         - php56u-bcmath
         - php56u-opcache
-        - php56u-common
         - php56u-mysqlnd
         - php56u-pdo
         - php56u-pear
         - php56u-gd
         - php56u-mcrypt
         - php56u-mbstring
+        - php56u-tidy
         - php56u-xml
         - php56u-xmlrpc
+        - php56u-pecl-igbinary
         - php56u-pecl-imagick
         - php56u-pecl-redis
       php70:
         - php70u-fpm
         - php70u-cli
         - php70u-common
+        - php70u-devel
         - php70u-pear
         - php70u-opcache
         - php70u-bcmath
@@ -66,15 +72,17 @@
         - php70u-gd
         - php70u-mcrypt
         - php70u-mbstring
+        - php70u-tidy
         - php70u-xml
         - php70u-xmlrpc
+        - php70u-pecl-igbinary
         - php70u-pecl-imagick
         - php70u-pecl-redis
       php71:
         - php71u-fpm
         - php71u-cli
         - php71u-common
-        - php71u-pear
+        - php71u-devel
         - php71u-opcache
         - php71u-bcmath
         - php71u-mysqlnd
@@ -83,9 +91,13 @@
         - php71u-gd
         - php71u-mcrypt
         - php71u-mbstring
+        - php71u-tidy
         - php71u-xml
         - php71u-xmlrpc
+        - php71u-pecl-igbinary
+        - php71u-pecl-imagick
         - php71u-pecl-redis
+        - pear1u
   become: yes
   tasks:
   - name: Installing ansible helpers
