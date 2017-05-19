@@ -2,7 +2,7 @@
 version: 5
 
 defaults:
-  datadir: /tmp/vagrant-puppet/environments/hiera
+  datadir: /tmp/vagrant-puppet/environments/data
   data_hash: yaml_data
 
 hierarchy:
