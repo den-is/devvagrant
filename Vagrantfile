@@ -3,6 +3,7 @@
 
 require 'yaml'
 boxes = YAML.load_file('CONFIG.yml')
+default_box_os = "bento/centos-7.4"
 
 postupmessage = <<EOF
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -17,7 +18,7 @@ Vagrant.configure(2) do |config|
   boxes.each do |box, values|
 
     config.vm.define box do |node|
-      node.vm.box       = "bento/centos-7.4"
+      node.vm.box       = values.fetch("box", default_box_os)
       node.vm.hostname  = box
 
       if values.has_key?("hw")

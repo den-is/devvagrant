@@ -6,6 +6,7 @@
 #   project_dir: path to directory with your project(s). forward slashes should be used as directory separator
 #   provision: optional. true, false or puppet. default true
 #   webserver: possible string values: "nginx", "apache"
+#   box: operating System image to use for VM. default provisioning works only with bento/centos-7.x
 #   php: possible integer values: 54, 56, 70, 71
 #   rvm: possible string values: yes, no
 #   pip: possible string values: yes, no
