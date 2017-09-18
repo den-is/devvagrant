@@ -9,7 +9,6 @@
     phpmyadmin_url: 'https://files.phpmyadmin.net/phpMyAdmin/4.7.4/phpMyAdmin-4.7.4-english.tar.xz'
     common_pkgs:
       - vim-enhanced
-      - nano
       - mlocate
       - mc
       - wget
@@ -18,7 +17,12 @@
       - unzip
       - bash-completion
       - bind-utils
+      - yum-utils
+      - nfs-utils
       - net-tools
+      - lsof
+      - strace
+      - traceroute
       - rsync
     php_pkgs:
       php54:
