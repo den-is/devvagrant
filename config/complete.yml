@@ -6,7 +6,7 @@
 # rvm: yes or no
 - hosts: all
   vars:
-    phpmyadmin_url: 'https://files.phpmyadmin.net/phpMyAdmin/4.7.5/phpMyAdmin-4.7.5-english.tar.xz'
+    phpmyadmin_url: 'https://files.phpmyadmin.net/phpMyAdmin/4.8.0/phpMyAdmin-4.8.0-english.tar.xz'
     common_pkgs:
       - vim-enhanced
       - mlocate
