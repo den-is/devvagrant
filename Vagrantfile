@@ -34,8 +34,10 @@ Vagrant.configure(2) do |config|
 
       node.vm.synced_folder values["project_dir"], "/home/vagrant/www", mount_options: ["dmode=777", "fmode=777"]
 
-      values["ports"].each do |guest, host|
-        node.vm.network "forwarded_port", guest: guest, host: host
+      if values.has_key?("ports")
+        values["ports"].each do |guest, host|
+          node.vm.network "forwarded_port", guest: guest, host: host
+        end
       end
 
       provision = values.fetch("provision", true)
