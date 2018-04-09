@@ -8,116 +8,116 @@
   vars:
     phpmyadmin_url: 'https://files.phpmyadmin.net/phpMyAdmin/4.8.0/phpMyAdmin-4.8.0-english.tar.xz'
     common_pkgs:
-      - vim-enhanced
-      - mlocate
-      - mc
-      - wget
-      - ftp
-      - zip
-      - unzip
-      - bash-completion
-      - bind-utils
-      - yum-utils
-      - nfs-utils
-      - net-tools
-      - lsof
-      - strace
-      - traceroute
-      - rsync
+    - vim-enhanced
+    - mlocate
+    - mc
+    - wget
+    - ftp
+    - zip
+    - unzip
+    - rsync
+    - bash-completion
+    - bind-utils
+    - yum-utils
+    - nfs-utils
+    - net-tools
+    - lsof
+    - strace
+    - traceroute
     php_pkgs:
       php54:
-        - php
-        - php-fpm
-        - php-cli
-        - php-common
-        - php-devel
-        - php-mysqlnd
-        - php-pdo
-        - php-pear
-        - php-gd
-        - php-mcrypt
-        - php-mbstring
-        - php-tidy
-        - php-xml
-        - php-xmlrpc
-        - php-pecl-redis
-        - php-pecl-imagick
+      - php
+      - php-fpm
+      - php-cli
+      - php-common
+      - php-devel
+      - php-mysqlnd
+      - php-pdo
+      - php-pear
+      - php-gd
+      - php-mcrypt
+      - php-mbstring
+      - php-tidy
+      - php-xml
+      - php-xmlrpc
+      - php-pecl-redis
+      - php-pecl-imagick
       php56:
-        - php56u
-        - php56u-fpm
-        - php56u-cli
-        - php56u-common
-        - php56u-devel
-        - php56u-bcmath
-        - php56u-opcache
-        - php56u-mysqlnd
-        - php56u-pdo
-        - php56u-pear
-        - php56u-gd
-        - php56u-mcrypt
-        - php56u-mbstring
-        - php56u-tidy
-        - php56u-xml
-        - php56u-xmlrpc
-        - php56u-pecl-igbinary
-        - php56u-pecl-imagick
-        - php56u-pecl-redis
+      - php56u
+      - php56u-fpm
+      - php56u-cli
+      - php56u-common
+      - php56u-devel
+      - php56u-bcmath
+      - php56u-opcache
+      - php56u-mysqlnd
+      - php56u-pdo
+      - php56u-pear
+      - php56u-gd
+      - php56u-mcrypt
+      - php56u-mbstring
+      - php56u-tidy
+      - php56u-xml
+      - php56u-xmlrpc
+      - php56u-pecl-igbinary
+      - php56u-pecl-imagick
+      - php56u-pecl-redis
       php70:
-        - php70u-fpm
-        - php70u-cli
-        - php70u-common
-        - php70u-devel
-        - php70u-pear
-        - php70u-opcache
-        - php70u-bcmath
-        - php70u-mysqlnd
-        - php70u-pdo
-        - php70u-json
-        - php70u-gd
-        - php70u-mcrypt
-        - php70u-mbstring
-        - php70u-tidy
-        - php70u-xml
-        - php70u-xmlrpc
-        - php70u-pecl-igbinary
-        - php70u-pecl-imagick
-        - php70u-pecl-redis
+      - php70u-fpm
+      - php70u-cli
+      - php70u-common
+      - php70u-devel
+      - php70u-pear
+      - php70u-opcache
+      - php70u-bcmath
+      - php70u-mysqlnd
+      - php70u-pdo
+      - php70u-json
+      - php70u-gd
+      - php70u-mcrypt
+      - php70u-mbstring
+      - php70u-tidy
+      - php70u-xml
+      - php70u-xmlrpc
+      - php70u-pecl-igbinary
+      - php70u-pecl-imagick
+      - php70u-pecl-redis
       php71:
-        - php71u-fpm
-        - php71u-cli
-        - php71u-common
-        - php71u-devel
-        - php71u-opcache
-        - php71u-bcmath
-        - php71u-mysqlnd
-        - php71u-pdo
-        - php71u-json
-        - php71u-gd
-        - php71u-mcrypt
-        - php71u-mbstring
-        - php71u-tidy
-        - php71u-xml
-        - php71u-xmlrpc
-        - php71u-pecl-igbinary
-        - php71u-pecl-imagick
-        - php71u-pecl-redis
-        - pear1u
+      - php71u-fpm
+      - php71u-cli
+      - php71u-common
+      - php71u-devel
+      - php71u-opcache
+      - php71u-bcmath
+      - php71u-mysqlnd
+      - php71u-pdo
+      - php71u-json
+      - php71u-gd
+      - php71u-mcrypt
+      - php71u-mbstring
+      - php71u-tidy
+      - php71u-xml
+      - php71u-xmlrpc
+      - php71u-pecl-igbinary
+      - php71u-pecl-imagick
+      - php71u-pecl-redis
+      - pear1u
   become: yes
   tasks:
   - name: Installing ansible helpers
     yum: name={{ item }} state=latest
-    with_items:
-      - libselinux-python
-      - MySQL-python
+    loop:
+    - libselinux-python
+    - MySQL-python
   - name: Installing YUM helpers
     yum: name={{ item }} state=latest
-    with_items:
-      - deltarpm
-      - yum-cron
-      - yum-utils
+    loop:
+    - deltarpm
+    - yum-cron
+    - yum-utils
   - name: Installing Common Packages
     yum: name={{ item }} state=latest
-    with_items: "{{ common_pkgs }}"
+    loop: "{{ common_pkgs }}"
 
   - name: Disabling SELinux
     selinux: state=disabled
@@ -157,9 +157,9 @@
 
   - name: Installing MySQL RDBMS (MariaDB)
     yum: name={{ item }} state=latest
-    with_items:
-      - mariadb
-      - mariadb-server
+    loop:
+    - mariadb
+    - mariadb-server
   - name: Putting Custom MySQL config
     copy: src=files/my.cnf dest=/etc/my.cnf owner=root group=root mode=0644
 
@@ -167,7 +167,7 @@
     yum: name=https://centos7.iuscommunity.org/ius-release.rpm state=present
   - name: Installing PHP
     yum: name={{ item }} state=latest
-    with_items: "{{ php_pkgs[ 'php' + php | string ] }}"
+    loop: "{{ php_pkgs[ 'php' + php | string ] }}"
   - name: Putting customphp.ini
     copy: src=files/customphp.ini dest=/etc/php.d/customphp.ini owner=root group=root mode=0644
   - name: Putting custom php-fpm pool
@@ -193,6 +193,8 @@
     unarchive: src=/tmp/phpmyadmin.tar.gz dest=/tmp creates=/opt/phpmyadmin
   - name: Moving PhpMyAdmin to /opt/phpmyadmin
     shell: mv /tmp/phpMyAdmin* /opt/phpmyadmin creates=/opt/phpmyadmin
+  - name: Creating /opt/phpmyadmin/tmp dir
+    file: path=/opt/phpmyadmin/tmp state=directory mode='0777'
   - name: Installing config.inc.php for phpmyadmin
     copy: src=files/phpmyadmin.config dest=/opt/phpmyadmin/config.inc.php owner=root group=root mode=0644
   - name: Apache config for PhpMyAdmin
