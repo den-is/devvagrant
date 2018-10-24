@@ -3,7 +3,7 @@
 
 require 'yaml'
 boxes = YAML.load_file('CONFIG.yml')
-default_box_os = "bento/centos-7.4"
+default_box_os = "bento/centos-7.5"
 
 postupmessage = <<EOF
 !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
